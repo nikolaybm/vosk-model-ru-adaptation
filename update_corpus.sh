@@ -49,9 +49,6 @@ make_action(){
     rm -rf $GRAPH_DIR/* || return 1
     rm -rf $RNNLM_DIR/* || return 1
     grep -oE "[А-Яа-я\\-]{3,}" $CORPUS_DIR/$CORPUS_NAME | sed "s/[А-Я]/\L&/g" | sort | uniq > $CORPUS_DIR/words.txt || return 1
-    #cd ./russian_g2p_neuro || return 1
-    #/opt/ve/bin/python3 -m src.generate_transcriptions $CORPUS_DIR/words.txt $CORPUS_DIR/words.dic || return 1
-    #cd $WORK_DIR || return 1
     python3 ./dictionary.py $CORPUS_DIR/words.txt > $CORPUS_DIR/words.dic || return 1
     cd $WORK_DIR/kenlm/build/bin || return 1
     lmplz -o 3 --discount_fallback < $CORPUS_DIR/words.txt > $CORPUS_DIR/lm.arpa || return 1
@@ -61,10 +58,8 @@ make_action(){
     ./dict_prep.sh || return 1
     cd $RECIPE_DIR/s5 || return 1
     ./utils/prepare_lang.sh --phone-symbol-table $PHONES_SRC $DICT_DIR "[unk]" $DICT_TMP $DICT_OUT || return 1
-    # Собираем грамматику (G.fst)
     gzip $LM_SRC || return 1
     ./utils/format_lm.sh $DICT_OUT $LM_SRC.gz $DICT_DIR/lexicon.txt $LANG_DIR || return 1
-    # Собираем и заменяем HCLG граф
     cd $WORK_DIR || return 1
     ./mkgraph.sh --self-loop-scale 1.0 $LANG_DIR $MODEL_DIR/am $GRAPH_DIR || return 1
     cd /opt/kaldi/egs/wsj/s5 || return 1
