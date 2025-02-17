@@ -1,3 +1,13 @@
-//Dockerfile.kaldi-vosk-model-ru
-//Dockerfile.kaldi-ext-ru
+Dockerfile.kaldi-vosk-model-ru
+Dockerfile.kaldi-ext-ru
 corpus.txt
+Dockerfile.kaldi-vosk-model-ru
+dictionary.py
+decode_new.sh
+path.sh
+asr-test.py
+update_corpus_022.sh
+README.md
+mergedicts.py
+Dockerfile.kaldi-ext-ru
+change_vocab.sh
